@@ -22,12 +22,14 @@
   },
   "dependencies": {
     "axios": "^0.18.1",
+    "axios-cookiejar-support": "^0.5.1",
     "fs": "^0.0.1-security",
     "interval-promise": "^1.2.0",
     "jshashes": "^1.0.7",
     "lodash": "^4.17.10",
     "os": "^0.1.1",
     "path": "^0.12.7",
+    "tough-cookie": "^3.0.1",
     "yargs": "^12.0.1"
   }
 }

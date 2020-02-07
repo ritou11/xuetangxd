@@ -1,0 +1,33 @@
+{
+  "name": "@ritou11/xuetangx",
+  "version": "0.3.3",
+  "description": "register network in Tsinghua",
+  "bin": "./bin/xuetangx.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "nogeek",
+  "maintainers": [
+    {
+      "name": "Haotian Liu",
+      "email": "ritou11@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.1",
+    "fs": "^0.0.1-security",
+    "interval-promise": "^1.2.0",
+    "jshashes": "^1.0.7",
+    "lodash": "^4.17.10",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
+    "yargs": "^12.0.1"
+  }
+}

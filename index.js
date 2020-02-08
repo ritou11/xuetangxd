@@ -3,25 +3,25 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const yargRoot = require('yargs');
-const { getMd5 } = require('./lib/utils.js');
+const { getRSA } = require('./lib/utils.js');
 const XuetangX = require('./lib/reg');
 
 const xuetangx = new XuetangX(1000);
 
-const readConfig = ({ configFile, username, password, md5Password, ip }) => {
+const readConfig = ({ configFile, username, password, rsaPassword, ip }) => {
   let config = {};
   try {
     config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
   } catch (e) { config = {}; }
-  const inputConfig = { username, password, md5Password, ip };
+  const inputConfig = { username, password, rsaPassword, ip };
   _.forEach(inputConfig, (value, key) => { config[key] = value || config[key]; });
-  if (config.password) config.md5Password = getMd5(config.password);
+  if (config.password) config.rsaPassword = getRSA(config.password);
   return config;
 };
 
 const checkConfig = (config) => {
   if (!config.username) return 'No Username';
-  if (!config.md5Password && !config.password) return 'No Password';
+  if (!config.rsaPassword && !config.password) return 'No Password';
   return false;
 };
 
@@ -63,7 +63,8 @@ module.exports = yargRoot
         return;
       }
       console.log(config);
-      xuetangx.login();
+      xuetangx.login(config.username, config.rsaPassword);
     })
   .help()
   .parse;
+

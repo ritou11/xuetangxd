@@ -69,12 +69,18 @@ module.exports = yargRoot
       xuetangx.login(config.username, config.rsaPassword).then(async (loginRes) => {
         const { nickname, school } = loginRes;
         console.log(`Login as ${nickname}, ${school}.`);
-        xuetangx.getChapters('1462810', 'ynu12021002034').then(({ data }) => {
+        xuetangx.getChapters('1462810', 'ynu12021002034').then((res) => {
+          const data = res && res.data;
+          if (!data) {
+            console.log('Failed to get chapters.');
+            return;
+          }
           /* eslint-disable */
           const { course_name, course_id } = data;
           fs.writeFileSync(`outputs/${course_id}${course_name}.json`, JSON.stringify(data, null, 4));
           /* eslint-enable */
-          xuetangx.iterChap(data.course_chapter);
+          const videoLeaves = xuetangx.iterChap(data.course_chapter);
+          console.log(videoLeaves);
         }).catch((e) => {
           console.log(e.response.data);
         });

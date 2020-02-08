@@ -69,12 +69,13 @@ module.exports = yargRoot
       xuetangx.login(config.username, config.rsaPassword).then(async (loginRes) => {
         const { nickname, school } = loginRes;
         console.log(`Login as ${nickname}, ${school}.`);
-        const info = await xuetangx.getCourseInfo('1462810', 'ynu12021002034');
-        console.log(info);
-        xuetangx.getChapters('1462810', 'ynu12021002034').then((chapters) => {
-          console.log(chapters);
+        xuetangx.getChapters('1462810', 'ynu12021002034').then(({ data }) => {
+          /* eslint-disable */
+          const { course_name, course_id } = data;
+          fs.writeFileSync(`outputs/${course_id}${course_name}.json`, JSON.stringify(data, null, 4));
+          /* eslint-enable */
+          xuetangx.iterChap(data.course_chapter);
         }).catch((e) => {
-          console.log(e.request);
           console.log(e.response.data);
         });
       }).catch(() => {

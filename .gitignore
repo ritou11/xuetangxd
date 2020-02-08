@@ -1,5 +1,6 @@
 config.json
 yarn-error.log
+outputs/
 node_modules/
 *.swp
 ~*

@@ -55,15 +55,23 @@ module.exports = yargRoot
           type: 'string',
         });
     },
-    (argv) => {
+    async (argv) => {
       const config = readConfig(argv);
       const ck = checkConfig(config);
       if (ck) {
         console.error(ck);
         return;
       }
-      console.log(config);
-      xuetangx.login(config.username, config.rsaPassword);
+      console.log(`Using ${config.username} ${config.rsaPassword}`);
+      xuetangx.login(config.username, config.rsaPassword).then(async (loginRes) => {
+        const { nickname, school } = loginRes;
+        console.log(`Login as ${nickname}, ${school}.`);
+        const info = await xuetangx.getCourseInfo('1462810', 'ynu12021002034');
+        console.log(info);
+        // xuetangx.getChapters('https://next.xuetangx.com/api/v1/lms/learn/course/chapter?cid=1462810&sign=ynu12021002034');
+      }).catch(() => {
+        console.log('Login failed.');
+      });
     })
   .help()
   .parse;

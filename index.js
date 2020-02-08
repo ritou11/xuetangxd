@@ -6,7 +6,7 @@ const yargRoot = require('yargs');
 const { getRSA, downloadLeaves } = require('./lib/utils.js');
 const XuetangX = require('./lib/reg');
 
-const xuetangx = new XuetangX(5000);
+const xuetangx = new XuetangX(10000);
 
 const readConfig = ({ configFile, username, password, rsaPassword, quality }) => {
   let config = {};
@@ -68,8 +68,12 @@ const handleCourse = async (config, argv, prepare = false) => {
     for (let i = 0; i < videoLeaves.length; i += 1) {
       if (!videoLeaves[i].link && videoLeaves[i].ccid) {
         console.log(`Getting link of ${videoLeaves[i].name}`);
-        // eslint-disable-next-line
-            videoLeaves[i].link = await xuetangx.getPlayurl(videoLeaves[i].ccid, config.quality);
+        try {
+          // eslint-disable-next-line
+          videoLeaves[i].link = await xuetangx.getPlayurl(videoLeaves[i].ccid, config.quality);
+        } catch (e) {
+          console.log(`Failed on ${videoLeaves[i].name} ${videoLeaves[i].id}`);
+        }
         console.log(videoLeaves[i].link);
       }
     }

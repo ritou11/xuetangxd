@@ -6,7 +6,7 @@ const yargRoot = require('yargs');
 const { getRSA } = require('./lib/utils.js');
 const XuetangX = require('./lib/reg');
 
-const xuetangx = new XuetangX(1000);
+const xuetangx = new XuetangX(5000);
 
 const readConfig = ({ configFile, username, password, rsaPassword, ip }) => {
   let config = {};
@@ -47,14 +47,49 @@ module.exports = yargRoot
     describe: 'MD5 password of your Tsinghua account.',
     type: 'string',
   })
-  .command('test', 'test', () => {},
-    async () => {
-    })
-  .command('down [<course>]', 'download the course',
+  .command('test <cacheFile>', 'testload the course',
     (yargs) => {
       yargs
-        .positional('course', {
-          describe: '<course> Which course to download.',
+        .positional('cacheFile', {
+          describe: '<cacheFile> The path of cached file',
+          type: 'string',
+        });
+    },
+    async (argv) => {
+      const config = readConfig(argv);
+      const ck = checkConfig(config);
+      if (ck) {
+        console.error(ck);
+        return;
+      }
+      console.log(`Using ${config.username} ${config.rsaPassword}`);
+      xuetangx.login(config.username, config.rsaPassword).then((loginRes) => {
+        const { nickname, school } = loginRes;
+        console.log(`Login as ${nickname}, ${school}.`);
+        const data = JSON.parse(fs.readFileSync(argv.cacheFile));
+        if (!data) {
+          console.log('Failed to get chapters.');
+          return;
+        }
+        const videoLeaves = xuetangx.iterChap(data.course_chapter);
+        videoLeaves.forEach(async (leaf) => {
+          leaf.ccid = 5;
+          // await xuetangx.getVideoLink(leaf.leafinfo_id, data.cid, data.sign);
+        });
+        fs.writeFileSync(`outputs/${data.course_id}${data.course_name}.test.json`, JSON.stringify(data, null, 4));
+      }).catch((e) => {
+        console.log('Login failed.', e);
+      });
+    })
+  .command('down <cid> <sign>', 'download the course',
+    (yargs) => {
+      yargs
+        .positional('cid', {
+          describe: '<cid> Example: 1462810',
+          type: 'string',
+        })
+        .positional('sign', {
+          describe: '<sign> Example: ynu12021002034',
           type: 'string',
         });
     },
@@ -69,7 +104,7 @@ module.exports = yargRoot
       xuetangx.login(config.username, config.rsaPassword).then(async (loginRes) => {
         const { nickname, school } = loginRes;
         console.log(`Login as ${nickname}, ${school}.`);
-        xuetangx.getChapters('1462810', 'ynu12021002034').then((res) => {
+        xuetangx.getChapters(argv.cid, argv.sign).then((res) => {
           const data = res && res.data;
           if (!data) {
             console.log('Failed to get chapters.');
@@ -77,12 +112,14 @@ module.exports = yargRoot
           }
           /* eslint-disable */
           const { course_name, course_id } = data;
+          data.cid = argv.cid;
+          data.sign = argv.sign;
           fs.writeFileSync(`outputs/${course_id}${course_name}.json`, JSON.stringify(data, null, 4));
           /* eslint-enable */
           const videoLeaves = xuetangx.iterChap(data.course_chapter);
-          console.log(videoLeaves);
+          xuetangx.getVideoLink(videoLeaves[0].leafinfo_id, argv.cid, argv.sign);
         }).catch((e) => {
-          console.log(e.response.data);
+          console.log(e);
         });
       }).catch(() => {
         console.log('Login failed.');

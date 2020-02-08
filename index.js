@@ -34,17 +34,17 @@ module.exports = yargRoot
   })
   .option('u', {
     alias: 'username',
-    describe: 'Username of your Tsinghua account.',
+    describe: 'Username of your account.',
     type: 'string',
   })
   .option('p', {
     alias: 'password',
-    describe: 'Plaintext password of your Tsinghua account.',
+    describe: 'Plaintext password of your account.',
     type: 'string',
   })
   .option('m', {
-    alias: 'md5-password',
-    describe: 'MD5 password of your Tsinghua account.',
+    alias: 'rsa-password',
+    describe: 'RSA password of your account.',
     type: 'string',
   })
   .command('test <cacheFile>', 'testload the course',
@@ -63,7 +63,7 @@ module.exports = yargRoot
         return;
       }
       console.log(`Using ${config.username} ${config.rsaPassword}`);
-      xuetangx.login(config.username, config.rsaPassword).then((loginRes) => {
+      xuetangx.login(config.username, config.rsaPassword).then(async (loginRes) => {
         const { nickname, school } = loginRes;
         console.log(`Login as ${nickname}, ${school}.`);
         const data = JSON.parse(fs.readFileSync(argv.cacheFile));
@@ -72,11 +72,24 @@ module.exports = yargRoot
           return;
         }
         const videoLeaves = xuetangx.iterChap(data.course_chapter);
-        videoLeaves.forEach(async (leaf) => {
-          leaf.ccid = 5;
-          // await xuetangx.getVideoLink(leaf.leafinfo_id, data.cid, data.sign);
-        });
+        for (let i = 0; i < videoLeaves.length; i += 1) {
+          if (!videoLeaves[i].ccid) {
+            console.log(`Getting CCID of ${videoLeaves[i].name}`);
+            // eslint-disable-next-line
+            videoLeaves[i].ccid = await xuetangx.getVideoCcid(videoLeaves[i].id, data.cid, data.sign);
+            console.log(videoLeaves[i].ccid);
+          }
+        }
         fs.writeFileSync(`outputs/${data.course_id}${data.course_name}.test.json`, JSON.stringify(data, null, 4));
+        for (let i = 0; i < videoLeaves.length; i += 1) {
+          if (!videoLeaves[i].link && videoLeaves[i].ccid) {
+            console.log(`Getting link of ${videoLeaves[i].name}`);
+            // eslint-disable-next-line
+            videoLeaves[i].link = await xuetangx.getPlayurl(videoLeaves[i].ccid);
+            console.log(videoLeaves[i].link);
+            break;
+          }
+        }
       }).catch((e) => {
         console.log('Login failed.', e);
       });

@@ -8,12 +8,12 @@ const XuetangX = require('./lib/reg');
 
 const xuetangx = new XuetangX(5000);
 
-const readConfig = ({ configFile, username, password, rsaPassword, ip }) => {
+const readConfig = ({ configFile, username, password, rsaPassword, quality }) => {
   let config = {};
   try {
     config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
   } catch (e) { config = {}; }
-  const inputConfig = { username, password, rsaPassword, ip };
+  const inputConfig = { username, password, rsaPassword, quality };
   _.forEach(inputConfig, (value, key) => { config[key] = value || config[key]; });
   if (config.password) config.rsaPassword = getRSA(config.password);
   return config;
@@ -46,6 +46,11 @@ module.exports = yargRoot
     alias: 'rsa-password',
     describe: 'RSA password of your account.',
     type: 'string',
+  })
+  .option('q', {
+    alias: 'quality',
+    describe: 'High quality or not',
+    type: 'boolean',
   })
   .command('test <cacheFile>', 'testload the course',
     (yargs) => {
@@ -85,11 +90,11 @@ module.exports = yargRoot
           if (!videoLeaves[i].link && videoLeaves[i].ccid) {
             console.log(`Getting link of ${videoLeaves[i].name}`);
             // eslint-disable-next-line
-            videoLeaves[i].link = await xuetangx.getPlayurl(videoLeaves[i].ccid);
+            videoLeaves[i].link = await xuetangx.getPlayurl(videoLeaves[i].ccid, config.quality);
             console.log(videoLeaves[i].link);
-            break;
           }
         }
+        fs.writeFileSync(`outputs/${data.course_id}${data.course_name}.test.json`, JSON.stringify(data, null, 4));
       }).catch((e) => {
         console.log('Login failed.', e);
       });

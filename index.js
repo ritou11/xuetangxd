@@ -51,7 +51,7 @@ const prepareCourse = async (config, argv) => {
     /* eslint-disable-next-line */
         const { course_name, course_id } = data;
     /* eslint-disable-next-line */
-        const output = argv.outputFile || `outputs/${course_id}${course_name}.json`;
+        const output = argv.outputFile || `${course_id}${course_name}.json`;
     fs.writeFileSync(output, JSON.stringify(data, null, 4));
 
     console.log('Select all video leaves...');
@@ -78,7 +78,7 @@ const prepareCourse = async (config, argv) => {
   }).catch(() => {
     console.log('Login failed.');
   });
-}
+};
 
 module.exports = yargRoot
   .option('c', {
@@ -117,7 +117,7 @@ module.exports = yargRoot
     describe: 'High quality or not',
     type: 'boolean',
   })
-  .command('test <cacheFile>', 'testload the course',
+  .command('test <tttt>', 'testload the course',
     (yargs) => {
       yargs
         .positional('tttt', {
@@ -166,7 +166,7 @@ module.exports = yargRoot
       }
       console.log('Select all video leaves...');
       const videoLeaves = xuetangx.iterChap(data.course_chapter);
-      downloadLeaves([videoLeaves[0]], 'outputs/');
+      downloadLeaves(videoLeaves, './');
     })
   .command('down [<cid>] [<sign>]', 'get the course video links',
     (yargs) => {

@@ -23,13 +23,16 @@
   "dependencies": {
     "axios": "^0.18.1",
     "axios-cookiejar-support": "^0.5.1",
+    "cli-progress": "^3.6.0",
     "fs": "^0.0.1-security",
     "interval-promise": "^1.2.0",
     "jshashes": "^1.0.7",
     "lodash": "^4.17.10",
+    "node-downloader-helper": "^1.0.12",
     "node-rsa": "^1.0.7",
     "os": "^0.1.1",
     "path": "^0.12.7",
+    "pretty-bytes": "^5.3.0",
     "tough-cookie": "^3.0.1",
     "yargs": "^12.0.1"
   }

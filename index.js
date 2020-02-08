@@ -47,6 +47,9 @@ module.exports = yargRoot
     describe: 'MD5 password of your Tsinghua account.',
     type: 'string',
   })
+  .command('test', 'test', () => {},
+    async () => {
+    })
   .command('down [<course>]', 'download the course',
     (yargs) => {
       yargs
@@ -68,7 +71,12 @@ module.exports = yargRoot
         console.log(`Login as ${nickname}, ${school}.`);
         const info = await xuetangx.getCourseInfo('1462810', 'ynu12021002034');
         console.log(info);
-        // xuetangx.getChapters('https://next.xuetangx.com/api/v1/lms/learn/course/chapter?cid=1462810&sign=ynu12021002034');
+        xuetangx.getChapters('1462810', 'ynu12021002034').then((chapters) => {
+          console.log(chapters);
+        }).catch((e) => {
+          console.log(e.request);
+          console.log(e.response.data);
+        });
       }).catch(() => {
         console.log('Login failed.');
       });

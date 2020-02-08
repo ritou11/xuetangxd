@@ -1,8 +1,8 @@
 # 学堂在线视频下载
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/ritou11/xuetangx.svg?style=flat-square)](https://github.com/ritou11/xuetangx)
-[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ritou11/xuetangx.svg?style=flat-square)](https://github.com/ritou11/xuetangx)
-[![license](https://img.shields.io/github/license/ritou11/xuetangx.svg?style=flat-square)](https://github.com/ritou11/xuetangx/blob/master/LICENSE.md)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ritou11/xuetangxd.svg?style=flat-square)](https://github.com/ritou11/xuetangxd)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ritou11/xuetangxd.svg?style=flat-square)](https://github.com/ritou11/xuetangxd)
+[![license](https://img.shields.io/github/license/ritou11/xuetangxd.svg?style=flat-square)](https://github.com/ritou11/xuetangxd/blob/master/LICENSE.md)
 
 > Author: Nogeek
 >
@@ -10,18 +10,39 @@
 
 ## 使用方法
 
-1. ```yarn global add @ritou11/xuetangx``` or ```npm i -g @ritou11/xuetangx```
-2. 默认配置文件 ```~/.xuetangx```，格式如下：```<说明 | 默认值> [可选]```
+1. [TODO] ```yarn global add @ritou11/xuetangxd``` or ```npm i -g @ritou11/xuetangxd```
+2. 默认配置文件 ```~/.xuetangxd```，格式如下：```<说明 | 默认值> [可选]```
 
    ```
    {
        "username": "<Username>",
-       ["md5Password": "<Password hashed by MD5>",]
+       ["rsaPassword": "<Password hashed by RSA>",]
        ["password": "<Clear text password>",]
    }
    ```
-* 其中md5Password仅可用于net.tsinghua的认证，使用auth.tsinghua则需要明文密码。
-* 其中MD5可以[在线生成](http://www.miraclesalad.com/webtools/md5.php)。
+* 其中rsaPassword可在输入明文密码后使用`xuetangxd.js dryrun`查看。
+3. 命令说明：
+```
+xuetangxd.js [command]
+
+Commands:
+  xuetangxd.js dryrun                    show the info & donnot execute
+  xuetangxd.js prepare [<cid>] [<sign>]  prepare the course cache file
+  xuetangxd.js fetch                     fetch the course videos
+  xuetangxd.js down [<cid>] [<sign>]     get the course video links
+
+Options:
+  --version           Show version number                              [boolean]
+  -c, --config-file   Json file that contains username, md5_password and other
+                      infomation.              [string] [default: "~/.xuetangx"]
+  -u, --username      Username of your account.                         [string]
+  -p, --password      Plaintext password of your account.               [string]
+  -m, --rsa-password  RSA password of your account.                     [string]
+  -f, --cache-file    Use specified cache file to start                 [string]
+  -o, --output-file   output cache file to the path                     [string]
+  -q, --quality       High quality or not                              [boolean]
+  --help              Show help                                        [boolean]
+```
 
 ## 协议
 

@@ -25,8 +25,8 @@ const checkConfig = (config) => {
   return false;
 };
 
-const prepareCourse = async (config, argv) => {
-  console.log(`Using ${config.username} ${config.rsaPassword}`);
+const handleCourse = async (config, argv, prepare = false) => {
+  console.log(`Using ${config.username} RSA: ${config.rsaPassword}`);
   xuetangx.login(config.username, config.rsaPassword).then(async (loginRes) => {
     const { nickname, school } = loginRes;
     console.log(`Login as ${nickname}, ${school}.`);
@@ -49,9 +49,9 @@ const prepareCourse = async (config, argv) => {
     data.cid = data.cid || argv.cid;
     data.sign = data.sign || argv.sign;
     /* eslint-disable-next-line */
-        const { course_name, course_id } = data;
+    const { course_name, course_id } = data;
     /* eslint-disable-next-line */
-        const output = argv.outputFile || `${course_id}${course_name}.json`;
+    const output = argv.outputFile || `${course_id}${course_name}.json`;
     fs.writeFileSync(output, JSON.stringify(data, null, 4));
 
     console.log('Select all video leaves...');
@@ -74,7 +74,9 @@ const prepareCourse = async (config, argv) => {
       }
     }
     fs.writeFileSync(output, JSON.stringify(data, null, 4));
-    // link ready here
+    if (!prepare) {
+      downloadLeaves(videoLeaves, './');
+    }
   }).catch(() => {
     console.log('Login failed.');
   });
@@ -84,7 +86,7 @@ module.exports = yargRoot
   .option('c', {
     alias: 'config-file',
     describe: 'Json file that contains username, md5_password and other infomation.',
-    default: path.join(os.homedir(), '.xuetangx'),
+    default: path.join(os.homedir(), '.xuetangxd'),
     type: 'string',
   })
   .option('u', {
@@ -117,16 +119,12 @@ module.exports = yargRoot
     describe: 'High quality or not',
     type: 'boolean',
   })
-  .command('test <tttt>', 'testload the course',
-    (yargs) => {
-      yargs
-        .positional('tttt', {
-          describe: '<tttt> None',
-          type: 'string',
-        });
-    },
+  .command('dryrun', 'show the info & donnot execute',
+    () => {},
     async (argv) => {
+      const config = readConfig(argv);
       console.log(argv);
+      console.log(`Using ${config.username} RSA: ${config.rsaPassword}`);
     })
   .command('prepare [<cid>] [<sign>]', 'prepare the course cache file',
     (yargs) => {
@@ -151,7 +149,7 @@ module.exports = yargRoot
         console.log('Insufficient input.');
         return;
       }
-      await prepareCourse(config, argv);
+      await handleCourse(config, argv, true);
     })
   .command('fetch', 'fetch the course videos', () => {},
     (argv) => {
@@ -191,7 +189,7 @@ module.exports = yargRoot
         console.log('Insufficient input.');
         return;
       }
-      prepareCourse(config, argv);
+      handleCourse(config, argv, false);
     })
   .help()
   .parse;

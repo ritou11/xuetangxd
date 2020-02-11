@@ -1,7 +1,7 @@
 {
   "name": "@ritou11/xuetangxd",
-  "version": "0.3.3",
-  "description": "register network in Tsinghua",
+  "version": "1.0.0",
+  "description": "Download videos on next.xuetangx.com",
   "bin": "./bin/xuetangxd.js",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "nogeek",
   "maintainers": [
     {
-      "name": "Haotian Liu",
+      "name": "Nogeek",
       "email": "ritou11@gmail.com"
     }
   ],

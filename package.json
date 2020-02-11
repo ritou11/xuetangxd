@@ -1,6 +1,6 @@
 {
   "name": "@ritou11/xuetangxd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Download videos on next.xuetangx.com",
   "bin": "./bin/xuetangxd.js",
   "main": "index.js",

@@ -22,16 +22,16 @@
        ["password": "<Clear text password>",]
    }
    ```
-* 其中rsaPassword可在输入明文密码后使用`xuetangxd.js dryrun`查看。
+* 其中rsaPassword可在输入明文密码后使用`xuetangxd dryrun`查看。
 3. 命令说明：
 ```
-xuetangxd.js [command]
+xuetangxd [command]
 
 Commands:
-  xuetangxd.js dryrun                    show the info & donnot execute
-  xuetangxd.js prepare [<cid>] [<sign>]  prepare the course cache file
-  xuetangxd.js fetch                     fetch the course videos
-  xuetangxd.js down [<cid>] [<sign>]     get the course video links
+  xuetangxd dryrun                    show the info & donnot execute
+  xuetangxd prepare [<cid>] [<sign>]  prepare the course cache file
+  xuetangxd fetch                     fetch the course videos
+  xuetangxd down [<cid>] [<sign>]     get the course video links
 
 Options:
   --version           Show version number                              [boolean]
@@ -45,6 +45,13 @@ Options:
   -q, --quality       High quality or not                              [boolean]
   --help              Show help                                        [boolean]
 ```
+4. `<cid>`和`<sign>`从课程链接中获取，格式为`https://next.xuetangx.com/course/<sign>/<cid>`.
+
+## TODO
+
+1. 课程代码从课程链接中解析
+2. 导出aria2格式的课程视频下载种子
+3. 完善异常处理
 
 ## 协议
 

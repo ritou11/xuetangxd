@@ -21,7 +21,7 @@
     "eslint-plugin-import": "^2.12.0"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "axios-cookiejar-support": "^0.5.1",
     "cli-progress": "^3.6.0",
     "fs": "^0.0.1-security",
